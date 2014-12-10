@@ -13,7 +13,7 @@ use diagnostics;
 
 use Term::ANSIColor;
 
-unless (((@ARGV == 3) || (@ARGV < 1)) && ($ARGV[0] =~ /^h|s|p$/ix)) {
+unless ((@ARGV < 1) || ((@ARGV == 3) && ($ARGV[0] =~ /^h|s|p$/ix))) {
   print "Run with no arguments to play the game, or pass three arguments:\n";
   print "blackjackTester.pl <h, s, p> <dealer_value> <player_value>\n";
   exit;
