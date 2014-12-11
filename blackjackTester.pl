@@ -66,7 +66,7 @@ my @split = (
 	    );
 
 if (@ARGV == 3) {
-  my ($type,$deal,$play) = ($ARGV[0],$ARGV[1],$ARGV[2]);
+  my ($type,$deal,$play) = (uc($ARGV[0]),$ARGV[1],$ARGV[2]);
 
   if (($deal !~ /^\d+|J|Q|K|A$/) || $play !~ /^\d+|J|Q|K|A$/) {
     print "<dealer_value> and <player_value> must be numeric, or a face card\n";
@@ -89,7 +89,7 @@ if (@ARGV == 3) {
   }
 
   $deal--;
-  if ($type =~ /^H$/ix) {
+  if ($type eq 'H') {
     if ($play < 4) {
       print "<player_value> on hard hands must be no lower than 4\n";
       exit;
@@ -100,7 +100,7 @@ if (@ARGV == 3) {
     $play = 17 if $play > 17;
     $play -= 7;
     print "$hard[$play][$deal]\n";
-  } elsif ($type =~ /^S$/ix) {
+  } elsif ($type eq 'S') {
     if ($play < 13) {
       print "<player_value on soft hands must be no lower than 13\n";
       exit;
@@ -110,10 +110,10 @@ if (@ARGV == 3) {
     }
     $play -= 12;
     print "$soft[$play][$deal]\n";
-  } elsif ($type =~ /^P$/ix) {
+  } elsif ($type eq 'P') {
     if ($play > 11) {
       print "<player_value> when splitting should be an individual card's";
-      print "worth, i.e. no higher than 11/A\n";
+      print " value, i.e. no higher than 11/A\n";
       exit;
     }
     $play--;
