@@ -112,7 +112,7 @@ if (@ARGV == 3) {
     print "$soft[$play][$deal]\n";
   } elsif ($type eq 'P') {
     if ($play > 11) {
-      print "<player_value> when splitting should be an individual card's";
+      print '<player_value> when splitting should be an individual card\'s';
       print " value, i.e. no higher than 11/A\n";
       exit;
     }
@@ -127,10 +127,10 @@ if (@ARGV == 3) {
     system("clear");
 
     # No decimal points
-    $perc=sprintf "%.f", 100*$score/$count if $score > 0;
-    $hardPerc=sprintf "%.f", 100*$hardScore/$hardCount if $hardScore > 0;
-    $softPerc=sprintf "%.f", 100*$softScore/$softCount if $softScore > 0;
-    $splitPerc=sprintf "%.f", 100*$splitScore/$splitCount if $splitScore > 0;
+    $perc=sprintf '%.f', 100*$score/$count if $score > 0;
+    $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
+    $softPerc=sprintf '%.f', 100*$softScore/$softCount if $softScore > 0;
+    $splitPerc=sprintf '%.f', 100*$splitScore/$splitCount if $splitScore > 0;
     print color 'red';
     print "$score/$count, $perc%";
     print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
@@ -138,13 +138,13 @@ if (@ARGV == 3) {
 
     $randType = int(rand(3))+1;
     if ($randType==1) {
-      print colored("Hard ", 'cyan');
+      print colored('Hard ', 'cyan');
       quizshow (10,10,\@hard);
     } elsif ($randType==2) {
-      print colored("Soft ", 'cyan');;
+      print colored('Soft ', 'cyan');;
       quizshow (7,10,\@soft);
     } elsif ($randType==3) {
-      print colored("Split ", 'cyan');;
+      print colored('Split ', 'cyan');;
       quizshow (10,10,\@split);
     } else {
       print "Error calculating random value between 1 and 3.\n";
@@ -165,8 +165,8 @@ sub quizshow
 
     print "You have $player, dealer shows $dealer.  What do?\n";
     # print "$row, $player, $col, $dealer, @answer\n";
-    print "[H]it, [S]tand, [D]ouble";
-    print ", S[p]lit" if ($randType==3);
+    print '[H]it, [S]tand, [D]ouble';
+    print ', S[p]lit' if ($randType==3);
     print "\n";
     my $guess = <>;
     exit if $guess =~ /exit|no?/ix;
@@ -185,7 +185,7 @@ sub quizshow
       }
     }
 
-    print "Next?";
+    print 'Next?';
     $guess = <>;
     chomp($guess);
     exit if $guess =~ /exit|no?/ix;
