@@ -66,7 +66,7 @@ my @split = (
 	    );
 
 if (@ARGV == 3) {
-  my ($type,$deal,$play) = (uc($ARGV[0]),$ARGV[1],$ARGV[2]);
+  my ($type,$deal,$play) = (uc $ARGV[0],uc $ARGV[1],uc $ARGV[2]);
 
   if (($deal !~ /^\d+|J|Q|K|A$/) || $play !~ /^\d+|J|Q|K|A$/) {
     print "<dealer_value> and <player_value> must be numeric, or a face card\n";
