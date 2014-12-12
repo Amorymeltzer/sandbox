@@ -84,6 +84,8 @@ sub prettyPrintTable
       print colored("$test ", 'blue');
     } elsif ($test =~ m/^R|Rh|Rs|Rp$/x) {
       print colored("$test ", 'white');
+    } elsif ($test =~ m/^Hard|Soft|Split$/x) {
+      print colored("$test ", 'bright_cyan');
     } else {
       print colored("$test ", 'bold bright_magenta');
     }
