@@ -63,7 +63,7 @@ sub repeater
 
     for (my $j=0;$j<$rows;$j++) {
       for (my $i=0;$i<$cols;$i++) {
-	prettyPrintTable($$aref[$j][$i]); # scalar $ of array @ $aref
+	prettyPrintTable(${$aref}[$j][$i]); # scalar $ of array @ $aref
       }
       print "\n";
     }
@@ -74,9 +74,9 @@ sub prettyPrintTable
   {
     my $test = shift;
 
-    if ($test =~ m/^H$/x) {
+    if ($test eq 'H') {
       print colored("$test ", 'red');
-    } elsif ($test =~ m/^S$/x) {
+    } elsif ($test eq 'S') {
       print colored("$test ", 'bright_yellow');
     } elsif ($test =~ m/^P|Ph$/x) {
       print colored("$test ", 'green');
