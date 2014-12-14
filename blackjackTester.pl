@@ -124,7 +124,7 @@ if (@ARGV == 3) {
   }
 } else {
   while (1) {
-    system("clear");
+    system 'clear';
 
     # No decimal points
     $perc=sprintf '%.f', 100*$score/$count if $score > 0;
@@ -136,7 +136,7 @@ if (@ARGV == 3) {
     print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
     print color 'reset';
 
-    $randType = int(rand(3))+1;
+    $randType = int rand(3)+1;
     if ($randType==1) {
       print colored('Hard ', 'cyan');
       quizshow (10,10,\@hard);
@@ -157,8 +157,8 @@ if (@ARGV == 3) {
 sub quizshow
   {
     my ($rows, $cols, $aref) = @_;
-    my $row = int(rand($rows))+1;
-    my $col = int(rand($cols))+1;
+    my $row = int rand($rows)+1;
+    my $col = int rand($cols)+1;
     my $player = $$aref[$row][0];
     my $dealer = $$aref[0][$col];
     my @answer = split //, $$aref[$row][$col];
@@ -187,7 +187,7 @@ sub quizshow
 
     print 'Next?';
     $guess = <>;
-    chomp($guess);
+    chomp $guess;
     exit if $guess =~ /exit|no?/ix;
   }
 
