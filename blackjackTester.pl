@@ -159,9 +159,9 @@ sub quizshow
     my ($rows, $cols, $aref) = @_;
     my $row = int rand($rows)+1;
     my $col = int rand($cols)+1;
-    my $player = $$aref[$row][0];
-    my $dealer = $$aref[0][$col];
-    my @answer = split //, $$aref[$row][$col];
+    my $player = ${$aref}[$row][0];
+    my $dealer = ${$aref}[0][$col];
+    my @answer = split //, ${$aref}[$row][$col];
 
     print "You have $player, dealer shows $dealer.  What do?\n";
     # print "$row, $player, $col, $dealer, @answer\n";
