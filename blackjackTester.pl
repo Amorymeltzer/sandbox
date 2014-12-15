@@ -124,15 +124,7 @@ if (@ARGV == 3) {
   while (1) {
     system 'clear';
 
-    # No decimal points
-    $perc=sprintf '%.f', 100*$score/$count if $score > 0;
-    $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
-    $softPerc=sprintf '%.f', 100*$softScore/$softCount if $softScore > 0;
-    $splitPerc=sprintf '%.f', 100*$splitScore/$splitCount if $splitScore > 0;
-    print color 'red';
-    print "$score/$count, $perc%";
-    print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
-    print color 'reset';
+    summaryScore();
 
     $randType = int rand(3)+1;
     if ($randType==1) {
@@ -218,5 +210,21 @@ sub calcScore
       print "Error calculating random value between 1 and 3.\n";
       exit;
     }
+    return;
+  }
+
+sub summaryScore
+    {
+    # No decimal points
+    $perc=sprintf '%.f', 100*$score/$count if $score > 0;
+    $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
+    $softPerc=sprintf '%.f', 100*$softScore/$softCount if $softScore > 0;
+    $splitPerc=sprintf '%.f', 100*$splitScore/$splitCount if $splitScore > 0;
+
+    print color 'red';
+    print "$score/$count, $perc%";
+    print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
+    print color 'reset';
+
     return;
   }
