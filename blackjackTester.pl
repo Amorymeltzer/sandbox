@@ -160,11 +160,7 @@ sub quizshow
     print "\n";
     my $guess = <>;
 
-    #  Non-capturing regex
-    if ($guess =~ /exit|no?|q(?:uit)?/ix) {
-
-      exit;
-    }
+    iWantOut($guess);
 
     shift @answer if $answer[0] =~ /r/ix; # No surrendering
     if ($guess =~ /$answer[0]/ix) { # try to get around silly Dh or Ph stuff
@@ -184,11 +180,9 @@ sub quizshow
     $guess = <>;
     chomp $guess;
 
-    #  Non-capturing regex
-    if ($guess =~ /exit|no?|q(?:uit)?/ix) {
+    iWantOut($guess);
 
-      exit;
-    }
+    return;
   }
 
 
@@ -214,7 +208,7 @@ sub calcScore
   }
 
 sub summaryScore
-    {
+  {
     # No decimal points
     $perc=sprintf '%.f', 100*$score/$count if $score > 0;
     $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
@@ -226,5 +220,17 @@ sub summaryScore
     print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
     print color 'reset';
 
+    return;
+  }
+
+sub iWantOut
+  {
+    my $out = shift || 'y';
+    #  Non-capturing regex
+    if ($out =~ /exit|no?|q(?:uit)?/ix) {
+      print "Final score:\n";
+      summaryScore();
+      exit;
+    }
     return;
   }
