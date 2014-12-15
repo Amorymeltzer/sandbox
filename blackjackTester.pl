@@ -93,8 +93,7 @@ if (@ARGV == 3) {
     if ($play < 4) {
       print "<player_value> on hard hands must be no lower than 4\n";
       exit;
-    }
-    elsif ($play < 8) {
+    } elsif ($play < 8) {
       $play = 8;
     }
     $play = 17 if $play > 17;
@@ -104,8 +103,7 @@ if (@ARGV == 3) {
     if ($play < 13) {
       print "<player_value on soft hands must be no lower than 13\n";
       exit;
-    }
-    elsif ($play > 19) {
+    } elsif ($play > 19) {
       $play = 19;
     }
     $play -= 12;
@@ -169,7 +167,12 @@ sub quizshow
     print ', S[p]lit' if ($randType==3);
     print "\n";
     my $guess = <>;
-    exit if $guess =~ /exit|no?/ix;
+
+    #  Non-capturing regex
+    if ($guess =~ /exit|no?|q(?:uit)?/ix) {
+
+      exit;
+    }
 
     shift @answer if $answer[0] =~ /r/ix; # No surrendering
     if ($guess =~ /$answer[0]/ix) { # try to get around silly Dh or Ph stuff
@@ -188,7 +191,12 @@ sub quizshow
     print 'Next?';
     $guess = <>;
     chomp $guess;
-    exit if $guess =~ /exit|no?/ix;
+
+    #  Non-capturing regex
+    if ($guess =~ /exit|no?|q(?:uit)?/ix) {
+
+      exit;
+    }
   }
 
 
