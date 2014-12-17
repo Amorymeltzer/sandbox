@@ -4,7 +4,7 @@
 
 use warnings;
 use strict;
-eval "use diagnostics; 1" or warn "diagnostics not found";
+eval 'use diagnostics; 1' or warn 'diagnostics not found';
 
 unless (@ARGV == 3 || @ARGV == 2) {
   print "Usage: inflation.pl <USD> <inYear1> <isWorthinYear2>\n";
@@ -41,7 +41,7 @@ my $oldYear = $ARGV[1];
 my $newYear = (@ARGV == 3) ? $ARGV[2] : 2013;
 
 # Two decimal places
-my $newDollar = sprintf "%.2f", $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear};
+my $newDollar = sprintf '%.2f', $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear};
 
 print "\$$oldDollar in $oldYear was worth \$$newDollar in $newYear\n";
 
