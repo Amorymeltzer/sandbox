@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-eval "use diagnostics; 1" or warn "diagnostics not found";
+eval 'use diagnostics; 1' or warn 'diagnostics not found';
 #if  (eval {require PDF;1;} ne 1) {
 #    print "wow\n"; # if module can't load
 #} else {
@@ -16,7 +16,7 @@ eval "use diagnostics; 1" or warn "diagnostics not found";
 #}
 
 #  my @tickers = ("VFTNX","VSCIX","VGSNX","FSKTX","FXSIX","FBGKX","^DJI","^IXIC","^GSPC","^TNX");
-my @tickers = ("VFTNX","VSCPX","VGSNX","FSKTX","FXSIX","FBGKX","^DJI","^IXIC","^GSPC","^TNX");
+my @tickers = ('VFTNX','VSCPX','VGSNX','FSKTX','FXSIX','FBGKX','^DJI','^IXIC','^GSPC','^TNX');
 
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
 $year = $year+1900;
