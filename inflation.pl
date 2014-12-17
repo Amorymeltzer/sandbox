@@ -30,7 +30,7 @@ my %yearAvg; # holds year->CPI data
 
 while (<DATA>) {
   chomp;
-  my @tmp = split ",";
+  my @tmp = split /,/;
   $yearAvg{$tmp[0]} = $tmp[1];
 }
 
