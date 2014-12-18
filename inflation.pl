@@ -34,16 +34,19 @@ while (<DATA>) {
   $past = $tmp[0];
 }
 
-# Validate inputs
-checkYearValue($ARGV[1]);
-checkYearValue($ARGV[-1]);
-
-
 my $oldDollar = $ARGV[0];
 my $oldYear = $ARGV[1];
-# Ternary ?: ($a = $test ? $b : $c;)
-# a is b if test, c if not
-my $newYear = (@ARGV == 3) ? $ARGV[2] : $present;
+my $newYear;
+
+# Validate inputs
+checkYearValue($oldYear);
+if (@ARGV == 3) {
+  $newYear = $ARGV[2];
+  checkYearValue($newYear);
+}
+else {
+  $newYear = $present;
+}
 
 # Two decimal places
 my $newDollar = sprintf '%.2f', $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear};
