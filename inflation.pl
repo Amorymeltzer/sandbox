@@ -16,9 +16,9 @@ if ($ARGV[0] !~ m/^-?\d*\.?\d+$/x) {
   exit;
 }
 
-my $present;		# newest allowable
-my $past = 1914;	# oldest allowable, set here because it doesn't change
-my %yearAvg;		# holds year->CPI data
+my $present;			# newest allowable
+my $past;			# oldest allowable
+my %yearAvg;			# holds year->CPI data
 
 while (<DATA>) {
   chomp;
@@ -30,17 +30,14 @@ while (<DATA>) {
   if ($. == 1) {
     $present = $tmp[0];
   }
+  # Oldest allowable
+  $past = $tmp[0];
 }
 
-if ($ARGV[1] !~ m/^\d\d\d\d$/x || $ARGV[1] > $present || $ARGV[1] < $past) {
-  print "Years must be between $past and $present\n";
-  exit;
-}
+# Validate inputs
+checkYearValue($ARGV[1]);
+checkYearValue($ARGV[-1]);
 
-if ($ARGV[-1] !~ m/^\d\d\d\d$/x || $ARGV[-1] > $present || $ARGV[-1] < $past) {
-  print "Years must be between $past and $present\n";
-  exit;
-}
 
 my $oldDollar = $ARGV[0];
 my $oldYear = $ARGV[1];
@@ -52,6 +49,20 @@ my $newYear = (@ARGV == 3) ? $ARGV[2] : $present;
 my $newDollar = sprintf '%.2f', $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear};
 
 print "\$$oldDollar in $oldYear was worth \$$newDollar in $newYear\n";
+
+
+sub checkYearValue
+  {
+    my $year = shift;
+    if ($year !~ m/^\d\d\d\d$/x) {
+      print "Years must be in YYYY format\n";
+    } elsif ($year > $present || $year < $past) {
+      print "Years must be between $past and $present\n";
+    } else {
+      return;
+    }
+    exit;
+  }
 
 
 ## The lines below are not Perl code, and are
