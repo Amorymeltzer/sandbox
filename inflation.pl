@@ -16,29 +16,37 @@ if ($ARGV[0] !~ m/^-?\d*\.?\d+$/x) {
   exit;
 }
 
-if ($ARGV[1] !~ m/^\d\d\d\d$/x || $ARGV[1] > 2013 || $ARGV[1] < 1914) {
-  print "Years must be between 1914 and 2013\n";
-  exit;
-}
-
-if ($ARGV[-1] !~ m/^\d\d\d\d$/x || $ARGV[-1] > 2013 || $ARGV[-1] < 1914) {
-  print "Years must be between 1914 and 2013\n";
-  exit;
-}
-
-my %yearAvg; # holds year->CPI data
+my $present;		# newest allowable
+my $past = 1914;	# oldest allowable, set here because it doesn't change
+my %yearAvg;		# holds year->CPI data
 
 while (<DATA>) {
   chomp;
+
   my @tmp = split /,/;
   $yearAvg{$tmp[0]} = $tmp[1];
+
+  # Newest allowable
+  if ($. == 1) {
+    $present = $tmp[0];
+  }
+}
+
+if ($ARGV[1] !~ m/^\d\d\d\d$/x || $ARGV[1] > $present || $ARGV[1] < $past) {
+  print "Years must be between $past and $present\n";
+  exit;
+}
+
+if ($ARGV[-1] !~ m/^\d\d\d\d$/x || $ARGV[-1] > $present || $ARGV[-1] < $past) {
+  print "Years must be between $past and $present\n";
+  exit;
 }
 
 my $oldDollar = $ARGV[0];
 my $oldYear = $ARGV[1];
 # Ternary ?: ($a = $test ? $b : $c;)
 # a is b if test, c if not
-my $newYear = (@ARGV == 3) ? $ARGV[2] : 2013;
+my $newYear = (@ARGV == 3) ? $ARGV[2] : $present;
 
 # Two decimal places
 my $newDollar = sprintf '%.2f', $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear};
