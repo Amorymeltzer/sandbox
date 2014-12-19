@@ -28,12 +28,6 @@ if ($ARGV[1] !~ m/^-?\d*\.?\d+$/gx) {
 
 my ($age,$income) = ($ARGV[0],$ARGV[1]);
 
-# Round age to nearest half-decade
-my $round = $age % 5;
-$age = 5*floor($age/5);
-$age +=5 if $round >= 2.5;
-print "$age\n";
-
 if ($age < 30 || $age > 65) {
   print "Your age must be between 30 and 65, sorry.\n";
   exit;
@@ -44,21 +38,25 @@ if ($income < 50000 || $income > 400000) {
   exit;
 }
 
+# Round age to nearest half-decade
+$age = properRound($age,5);
+print "Age:\t$age\n";
+
 # Round income according to the ranges below
 # Work backwards to avoid incompatibility
 # Round to nearest 100k for 300k-400k
 if ($income > 300000) {
-  $income = properRound(100000);
+  $income = properRound($income,100000);
 }
 # Round to nearest 50k for 100k-300k
 elsif ($income > 100000) {
-  $income = properRound(50000);
+  $income = properRound($income,50000);
 }
 # Round to nearest quarter thousand for 50k-100k
 else {
-  $income = properRound(25000);
+  $income = properRound($income,25000);
 }
-print "$income\n";
+print "Income:\t$income\n";
 
 my %savings = (
 	       30 => {50000 => 0.4, 75000 => 0.6, 100000 => 1.0, 150000 => 1.7, 200000 => 2.0, 250000 => 2.2, 300000 => 2.4, 400000 => 2.8},
@@ -80,9 +78,10 @@ print "That comes to around \$$save.\n";
 # Round according to particular ranges
 sub properRound
   {
+    my $query = shift;
     my $divisor = shift;
-    $round = $income % $divisor;
-    $income = $divisor*floor($income/$divisor);
-    $income += $divisor if $round >= $divisor/2;
-    return $income;
+    my $round = $query % $divisor;
+    $query = $divisor*floor($query/$divisor);
+    $query += $divisor if $round >= $divisor/2;
+    return $query;
   }
