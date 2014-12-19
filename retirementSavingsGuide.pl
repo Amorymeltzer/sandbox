@@ -3,14 +3,13 @@
 # Calculate a reasonable salary checkpoint given an age
 # http://www.businessinsider.com/retirement-savings-guide-2014-3
 
-# Just allow multiples of 50k?  What about 75k? ;;;;;; ##### FIXME TODO
 # Figure out how else to do hash of hash.  Shorter. ;;;;;; ##### FIXME TODO
 
 use strict;
 use warnings;
 use diagnostics;
 
-use POSIX; # fpr floor/ceiling calculations
+use POSIX;			# for floor/ceiling calculations
 
 unless (@ARGV == 2) {
   print "Usage: $0 <age> <income>\n";
@@ -40,16 +39,26 @@ if ($age < 30 || $age > 65) {
   exit;
 }
 
-# Round income to nearest quarter thousand
-$round = $income % 25000;
-$income = 25000*floor($income/25000);
-$income += 25000 if $round >= 12500;
-print "$income\n";
-
 if ($income < 50000 || $income > 400000) {
   print "Your income must be between \$50,000 and \$400,000, sorry.\n";
   exit;
 }
+
+# Round income according to the ranges below
+# Work backwards to avoid incompatibility
+# Round to nearest 100k for 300k-400k
+if ($income > 300000) {
+  $income = properRound(100000);
+}
+# Round to nearest 50k for 100k-300k
+elsif ($income > 100000) {
+  $income = properRound(50000);
+}
+# Round to nearest quarter thousand for 50k-100k
+else {
+  $income = properRound(25000);
+}
+print "$income\n";
 
 my %savings = (
 	       30 => {50000 => 0.4, 75000 => 0.6, 100000 => 1.0, 150000 => 1.7, 200000 => 2.0, 250000 => 2.2, 300000 => 2.4, 400000 => 2.8},
@@ -66,3 +75,14 @@ my $mult = $savings{$age}{$income};
 print "\nBy now you should have saved about $mult times your current salary.\n";
 my $save = $mult*$income;
 print "That comes to around \$$save.\n";
+
+
+# Round according to particular ranges
+sub properRound
+  {
+    my $divisor = shift;
+    $round = $income % $divisor;
+    $income = $divisor*floor($income/$divisor);
+    $income += $divisor if $round >= $divisor/2;
+    return $income;
+  }
