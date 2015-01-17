@@ -72,6 +72,7 @@ sub checkYearValue
 ## not examined by the compiler.  Rather, they
 ## are a list of CPI-U data read in as <DATA>.
 __END__
+2014,236.736
 2013,232.957
 2012,229.594
 2011,224.939
