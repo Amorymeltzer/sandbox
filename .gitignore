@@ -1,8 +1,0 @@
-*.fasta
-/nytprof/*
-.gitignore
-
-# Ignore changes
-# git update-index --assume-unchanged FILE
-# Allow changes
-# git update-index --no-assume-unchanged FILE
