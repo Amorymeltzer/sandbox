@@ -15,7 +15,7 @@ eval 'use diagnostics; 1' or warn 'diagnostics not found';
 #    diagnostics->import();
 #}
 
-my @tickers = ('FSPNX','FBGKX','FXSTX','FSKTX','FXAIX','FOSKX','FLBAX','^DJI','^IXIC','^GSPC','^TNX');
+my @tickers = ('VSCPX','FSPNX','FXSTX','FBGKX','FSKAX','FXAIX','FLBAX','FOSKX','FDIKX','CCPIX','FGCKX','^DJI','^IXIC','^GSPC','^TNX');
 
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
 $year = $year+1900;
