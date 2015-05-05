@@ -17,7 +17,7 @@ eval 'use diagnostics; 1' or warn 'diagnostics not found';
 
 my @tickers = ('VSCPX','FSPNX','FXSTX','FBGKX','FSKAX','FXAIX','FLBAX','FOSKX','FDIKX','CCPIX','FGCKX','^DJI','^IXIC','^GSPC','^TNX');
 
-my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime(time);
+my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst)=localtime time;
 $year = $year+1900;
 $mon = $mon+1;
 my $date = "$mon/$mday/$year";
