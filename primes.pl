@@ -48,9 +48,9 @@ if ($choice =~ m/l/i)		# The whole list up to that number
 # Test for primes
 sub primeTest
   {
-    my $max = shift(@_);
-    foreach my $y (2..sqrt($max)) {
-      $truth = $max/$y if $max%$y == 0;
-      last if $max%$y == 0;
+    my $max = shift @_;
+    foreach my $y (2..sqrt $max) {
+      $truth = $max/$y if $max % $y == 0;
+      last if $max % $y == 0;
     }
   }
