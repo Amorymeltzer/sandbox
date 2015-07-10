@@ -12,40 +12,40 @@ use warnings;
 
 use Array::Uniq;
 
-my $dictionary = "big_english.txt";
+my $dictionary = 'big_english.txt';
 #my $dictionary = "english.txt";
-my $hangTmp = "hang_tmp.txt";
-my $working = "hang_working.txt";
+my $hangTmp = 'hang_tmp.txt';
+my $working = 'hang_working.txt';
 
 my %ranking;
 my $letterCounts;
-my $wordCount = "0";
+my $wordCount = 0;
 
 
 print "How long is the word?\n";
 my $wordLength = <>;
 
-open (my $dict, "<$dictionary") or die $1;
-open (my $tmp, ">$hangTmp") or die $1;
+open my $dict, '<', "$dictionary" or die $1;
+open my $tmp, '>', "$hangTmp" or die $1;
 
 while (my $word = <$dict>) {
-  chomp($word);
-  $word = uc($word);
+  chomp $word;
+  $word = uc $word;
   print $tmp "$word\n" if length($word) == $wordLength;
 }
-close($dict);
-close($tmp);
+close $dict;
+close $tmp;
 
 print "What is the first known letter?\n";
 my $guess = <>;
 
-chomp($guess);			# not necessary if the /x option used in regex
+chomp $guess;			# not necessary if the /x option used in regex
 
 
-open ($tmp, "<$hangTmp") or die $!;
+open $tmp, '<', "$hangTmp" or die $!;
 while (my $word = <$tmp>) {
-  chomp($word);
-  $word = uc($word);
+  chomp $word;
+  $word = uc $word;
 
   if ($word =~ m/$guess/io) {
     $wordCount++;
@@ -56,7 +56,7 @@ while (my $word = <$tmp>) {
 
 sortAndShow();
 
-close ($dict);
+close $dict;
 
 
 
