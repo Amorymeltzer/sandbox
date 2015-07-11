@@ -5,11 +5,11 @@ use warnings;
 
 my @doors;
 my $carChance;
-my $reveal = "123"; # All options, will just subst out car and choice
+my $reveal = '123'; # All options, will just subst out car and choice
 
 print "Play or Test?\n";
 #my $choice = <>; # User choice for a full list or number
-my $choice = "p";
+my $choice = 'p';
 while ($choice !~ m/[pt]/io)
 {
     print "Try again\n";
@@ -28,14 +28,14 @@ if ($choice =~ m/p/i) # Play the door game
 	print "Pick again\n";
 	$choice = <>;
     }
-    
-    $choice = "1" if $choice =~ m/1|one/io;
-    $choice = "2" if $choice =~ m/2|two/io;
-    $choice = "3" if $choice =~ m/3|three/io;
+
+    $choice = '1' if $choice =~ m/1|one/io;
+    $choice = '2' if $choice =~ m/2|two/io;
+    $choice = '3' if $choice =~ m/3|three/io;
 
 
     # Reveal the goat
-    
+
     $reveal =~ s/$choice//;
     $reveal =~ s/$carChance//;
 
@@ -50,7 +50,7 @@ if ($choice =~ m/p/i) # Play the door game
     print "Behind Door #$reveal is...\n";
     print "$doors[$reveal]\n";
 
-    my $left = "123";
+    my $left = '123';
     $left =~ s/$choice//;
     $left =~ s/$reveal//;
 
@@ -58,8 +58,8 @@ if ($choice =~ m/p/i) # Play the door game
     my $doorChoice = <>;
     $choice = $doorChoice if $doorChoice =~ m/yes|$left/io;
 
-    print "\nCongratulations!  You've won a new car!\n" if $doors[$choice] eq "car";
-    print "\nOhhh, sorry, you got the goat...\n" if $doors[$choice] eq "goat";
+    print "\nCongratulations!  You've won a new car!\n" if $doors[$choice] eq 'car';
+    print "\nOhhh, sorry, you got the goat...\n" if $doors[$choice] eq 'goat';
 }
 
 
@@ -67,7 +67,7 @@ if ($choice =~ m/t/i) # Simulate the door game
 {
     print "How many simulations do you want to run?\n";
     my $trials = <>;
-    
+
     for my $x (1..$trials)
     {
 	doorPopulate();
@@ -90,12 +90,12 @@ sub doorPopulate
     @doors = ("","goat","goat","goat");
 
     print "@doors\n";
-    $doors[$carChance] = "car";
+    $doors[$carChance] = 'car';
     print "$doors[1]\t$doors[2]\t$doors[3]\n";
 }
 
 # Which door will you pick?
 sub doorChoice
 {
-    
+
 }
