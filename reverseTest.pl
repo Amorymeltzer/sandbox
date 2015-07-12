@@ -8,7 +8,7 @@ print "$_\n";
 print reverse;
 print scalar reverse;
 
-my @test = ("a","b","","c");
+my @test = ('a','b','','c');
 print "@test\n";
 print scalar @test."\n";
 @test = reverse @test;
