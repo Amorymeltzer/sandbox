@@ -61,7 +61,7 @@ my @newSeq;
 foreach my $tide (@seq) {
   my $mut = int(rand(100))+1;
   @newSeq = (@newSeq,$tide) if $mut < 86;
-  @newSeq = (@newSeq,"0") if $mut > 85;
+  @newSeq = (@newSeq,'0') if $mut > 85;
 }
 my $count = 0;
 for my $x (1..@newSeq) {
