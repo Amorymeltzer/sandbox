@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 # switchTest.pl by Amory Meltzer
-# Test out this
+# Test this out
 
 use strict;
 use warnings;
