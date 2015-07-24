@@ -29,7 +29,7 @@ sub read_rgb {
     my @rgb = hex2rgb $hex;
     push @col, [@rgb, $name];
   }
-  close $rgb;
+  close $rgb or die $!;
   \@col
 }
 
