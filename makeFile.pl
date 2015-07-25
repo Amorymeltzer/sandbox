@@ -2,11 +2,12 @@
 
 use strict;
 use warnings;
-my $path = "/Users/amorymeltzer/Documents/perl/sandbox/";
+my $path = '/Users/amorymeltzer/Documents/perl/sandbox/';
 
-open (my $data, '>', "$path"."madeFile.txt") or die $!;
+open my $data, '>', "$path".'madeFile.txt' or die $!;
 
-foreach (@ARGV)
-{
-    print $data "$_";
+foreach (@ARGV) {
+  print $data "$_";
 }
+
+close $data or die $!;
