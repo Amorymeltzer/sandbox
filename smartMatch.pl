@@ -25,7 +25,8 @@ say 'You said the secret word!' if $input ~~ /friend/;
 
 my @friends = qw(Frodo Meriadoc Pippin Samwise Gandalf);
 my $name    = <>;
-chomp($name);
+chomp $name;
+
 say "You're a friend" if $name ~~ @friends;
 my @foo = qw(x y z xyzzy ninja);
 my @bar = qw(x y z xyzzy ninja);
