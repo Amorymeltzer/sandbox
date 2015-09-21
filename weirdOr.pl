@@ -5,8 +5,8 @@ use strict;
 use warnings;
 use diagnostics;
 
-my $one = "1";
-my $two = "2";
+my $one = '1';
+my $two = '2';
 my $onse;
 
 #defined($one) // $two;
