@@ -28,7 +28,7 @@ system "echo $date > ~/Documents/perl/sandbox/beneOut.csv";
 foreach my $stock (@tickers)
 {
     print "$stock\t";
-    my $value = `~/bin/ticker.sh $stock`;
+    my $value = `~/bin/stockclose $stock`;
     $value =~ s/,//gx;
     chomp $value;
     print "$value\n";
