@@ -23,7 +23,6 @@ $mon = $mon+1;
 my $date = "$mon/$mday/$year";
 
 system "echo $date > ~/Documents/perl/sandbox/beneOut.csv";
-#  system "printf '%s' '$date' >> ~/Documents/perl/sandbox/stockTrack.csv";
 
 foreach my $stock (@tickers)
 {
@@ -33,12 +32,9 @@ foreach my $stock (@tickers)
     chomp $value;
     print "$value\n";
     system "echo $value >> ~/Documents/perl/sandbox/beneOut.csv";
-    #  system "printf '%s' ',$value' >> ~/Documents/perl/sandbox/stockTrack.csv";
 }
 
-#system "perl -pi -e 's/\r//gi' ~/Documents/perl/sandbox/beneOut.csv";
+#  system "perl -pi -e 's/\r//gi' ~/Documents/perl/sandbox/beneOut.csv";
 system "perl -pi -e 's/\n/\,/gi' ~/Documents/perl/sandbox/beneOut.csv";
-
-#  system "echo >> ~/Documents/perl/sandbox/stockTrack.csv";
 
 print "Data in file: beneOut.csv\n";
