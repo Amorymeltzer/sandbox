@@ -59,7 +59,7 @@ sub checkYearValue
     if ($year !~ m/^\d\d\d\d$/x) {
       print "Years must be in YYYY format\n";
     } elsif ($year > $present || $year < $past) {
-      print "Years must be between $past and $present\n";
+      print "Years must be between $past and $present, inclusive\n";
     } else {
       return;
     }
