@@ -6,14 +6,35 @@ use strict;
 use warnings;
 use diagnostics;
 
-my $num = join(" ",@ARGV) // ""; # unpack, compress in case card number is input with spaces i.e. $ARGV[1], etc.
-$num =~ s/[-\s]//g;		 # remove - and spaces
+my $num = join(q{ },@ARGV) // q{}; # unpack, compress in case card number is input with spaces i.e. $ARGV[1], etc.
+$num =~ s/[-\s]//g;		   # remove - and spaces
 
 unless (@ARGV && $num =~ m/^[\dx]+$/i) # allow testing via X instead of number
   {
     print "Usage: $0 <cardNumber>\n";
     exit;
   }
+
+my $mun = reverse $num;
+my @revNum = split //, $mun;
+my $first = shift @revNum;
+my $sum = 0;
+foreach my $idx (0..scalar @revNum - 1) {
+  $sum += $revNum[$idx];
+  if (($idx+1)%2>0) {
+    $sum += $revNum[$idx];
+    $sum -= 9 if $revNum[$idx] >= 5;
+  }
+}
+
+my $check = (9*$sum)%10;
+my $valid = ($check+$sum)%10;
+if ($valid == 0 && $check == $first) {
+  print "Valid number!\n";
+} else {
+  print "Invalid!\n";
+  exit;
+}
 
 my $length = length $num;
 
