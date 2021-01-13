@@ -15,4 +15,4 @@ function timer(func, count=10000, name) {
 	}
 	console.timeEnd(name);
 }
-module.exports = { timer };
+exports.timer = timer;
