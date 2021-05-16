@@ -4,6 +4,7 @@
 # Or, with arguments, print what should be played
 
 # Need to correct for surrender option FIXME TODO
+# Facecards not really acceptable for player value, can't give two FIXME TODO
 ## Simple printing very very naive, especially with wrong ranges and Aces
 ## Subroutine for simple printing
 
@@ -11,21 +12,11 @@ use strict;
 use warnings;
 use diagnostics;
 
+use English qw(-no_match_vars);
+use utf8;
+use Getopt::Std;
 use Term::ANSIColor;
 
-unless ((@ARGV < 1) || ((@ARGV == 3) && ($ARGV[0] =~ /^h|s|p$/ix))) {
-  print "Run with no arguments to play the game, or pass three arguments:\n";
-  print "blackjackTester.pl <h, s, p> <dealer_value> <player_value>\n";
-  exit;
-}
-
-
-my $randType = 0;
-my $tmp;
-my ($score,$count,$perc) = (0,0,0);
-my ($hardScore,$hardCount,$hardPerc) = (0,0,0);
-my ($softScore,$softCount,$softPerc) = (0,0,0);
-my ($splitScore,$splitCount,$splitPerc) = (0,0,0);
 my @hard = (
 	    [ qw (Hard 2 3 4 5 6 7 8 9 10 A)],
 	    [ qw (4-8 H H H H H H H H H H)],
@@ -65,8 +56,18 @@ my @split = (
 	     [ qw (A/A P P P P P P P P P P)],
 	    );
 
-if (@ARGV == 3) {
-  my ($type,$deal,$play) = (uc $ARGV[0],uc $ARGV[1],uc $ARGV[2]);
+# Parse commandline options
+my %opts = ();
+getopts('h', \%opts);
+
+if ($opts{h} || @ARGV == 1 || @ARGV == 2 || @ARGV > 3) {
+  usage();
+} elsif (@ARGV == 3) {
+  if ($ARGV[0] !~ /^h|s|p$/ix) {
+    usage();
+  }
+
+  my ($type, $deal, $play) = (uc $ARGV[0], uc $ARGV[1], uc $ARGV[2]);
 
   if (($deal !~ /^\d+|J|Q|K|A$/) || $play !~ /^\d+|J|Q|K|A$/) {
     print "<dealer_value> and <player_value> must be numeric, or a face card\n";
@@ -76,8 +77,8 @@ if (@ARGV == 3) {
   $deal = 10 if $deal =~ /^J|Q|K$/ix;
   $play = 10 if $play =~ /^J|Q|K$/ix;
 
-  $deal = 11 if $deal =~ /^A$/ix;
-  $play = 11 if $play =~ /^A$/ix;
+  $deal = 11 if $deal eq 'A';
+  $play = 11 if $play eq 'A';
 
   if (($deal < 2) || ($deal > 11)) {
     print "<dealer_value> must be between 2 and 11, or a face card\n";
@@ -88,7 +89,7 @@ if (@ARGV == 3) {
     exit;
   }
 
-  $deal--;
+  $deal--; # Minus one to make this usable as an array index
   if ($type eq 'H') {
     if ($play < 4) {
       print "<player_value> on hard hands must be no lower than 4\n";
@@ -99,6 +100,7 @@ if (@ARGV == 3) {
     $play = 17 if $play > 17;
     $play -= 7;
     print "$hard[$play][$deal]\n";
+    exit;
   } elsif ($type eq 'S') {
     if ($play < 13) {
       print "<player_value on soft hands must be no lower than 13\n";
@@ -108,6 +110,7 @@ if (@ARGV == 3) {
     }
     $play -= 12;
     print "$soft[$play][$deal]\n";
+    exit;
   } elsif ($type eq 'P') {
     if ($play > 11) {
       print '<player_value> when splitting should be an individual card\'s';
@@ -116,121 +119,142 @@ if (@ARGV == 3) {
     }
     $play--;
     print "$split[$play][$deal]\n";
+    exit;
   } else {
     print "Error\n";
-    exit;
-  }
-} else {
-  while (1) {
-    system 'clear';
-
-    summaryScore();
-
-    $randType = int rand(3)+1;
-    if ($randType==1) {
-      print colored('Hard ', 'cyan');
-      quizshow (10,10,\@hard);
-    } elsif ($randType==2) {
-      print colored('Soft ', 'cyan');;
-      quizshow (7,10,\@soft);
-    } elsif ($randType==3) {
-      print colored('Split ', 'cyan');;
-      quizshow (10,10,\@split);
-    } else {
-      print "Error calculating random value between 1 and 3.\n";
-      exit;
-    }
-
+    exit 1;
   }
 }
 
-sub quizshow
-  {
-    my ($rows, $cols, $aref) = @_;
-    my $row = int rand($rows)+1;
-    my $col = int rand($cols)+1;
-    my $player = ${$aref}[$row][0];
-    my $dealer = ${$aref}[0][$col];
-    my @answer = split //, ${$aref}[$row][$col];
+my $randType = 0;
+my $tmp;
+my ($score,$count,$perc) = (0,0,0);
+my ($hardScore,$hardCount,$hardPerc) = (0,0,0);
+my ($softScore,$softCount,$softPerc) = (0,0,0);
+my ($splitScore,$splitCount,$splitPerc) = (0,0,0);
 
-    print "You have $player, dealer shows $dealer.  What do?\n";
-    # print "$row, $player, $col, $dealer, @answer\n";
-    print '[H]it, [S]tand, [D]ouble';
-    print ', S[p]lit' if ($randType==3);
-    print "\n";
-    my $guess = <>;
 
-    iWantOut($guess);
+while (1) {
+  system 'clear';
 
-    shift @answer if $answer[0] =~ /r/ix; # No surrendering
-    if ($guess =~ /$answer[0]/ix) { # try to get around silly Dh or Ph stuff
-      print "Correct! You should @answer\n";
-      calcScore(1);
+  summaryScore();
+
+  $randType = int rand(3)+1;
+  if ($randType==1) {
+    print colored('Hard ', 'cyan');
+    quizshow (10,10,\@hard);
+  } elsif ($randType==2) {
+    print colored('Soft ', 'cyan');;
+    quizshow (7,10,\@soft);
+  } elsif ($randType==3) {
+    print colored('Split ', 'cyan');;
+    quizshow (10,10,\@split);
+  } else {
+    print "Error calculating random value between 1 and 3.\n";
+    exit;
+  }
+}
+
+
+sub quizshow {
+  my ($rows, $cols, $aref) = @_;
+  my $row = int rand($rows)+1;
+  my $col = int rand($cols)+1;
+  my $player = ${$aref}[$row][0];
+  my $dealer = ${$aref}[0][$col];
+  my @answer = split //, ${$aref}[$row][$col];
+
+  print "You have $player, dealer shows $dealer.  What do?\n";
+  # print "$row, $player, $col, $dealer, @answer\n";
+  print '[H]it, [S]tand, [D]ouble';
+  print ', S[p]lit' if ($randType==3);
+  print "\n";
+  my $guess = <>;
+
+  iWantOut($guess);
+
+  shift @answer if $answer[0] =~ /r/ix; # No surrendering
+  # try to get around silly Dh or Ph stuff
+  if ($guess =~ /$answer[0]/ix) {
+    print "Correct! You should @answer\n";
+    calcScore(1);
+  } else {
+    if ($guess =~ /$answer[-1]/ix) {
+      print "Almost correct! You should @answer\n";
+      calcScore();
     } else {
-      if ($guess =~ /$answer[-1]/ix) {
-	print "Almost correct! You should @answer\n";
-	calcScore();
-      } else {
-	print "Sorry, the correct answer was @answer\n";
-	calcScore();
-      }
+      print "Sorry, the correct answer was @answer\n";
+      calcScore();
     }
-
-    print 'Next?';
-    $guess = <>;
-    chomp $guess;
-
-    iWantOut($guess);
-
-    return;
   }
 
+  print 'Next?';
+  $guess = <>;
+  chomp $guess;
 
-sub calcScore
-  {
-    $tmp = shift;
-    $score++ if $tmp;
-    $count++;
-    if ($randType == 1) {
-      $hardScore++ if $tmp;
-      $hardCount++;
-    } elsif ($randType == 2) {
-      $softScore++ if $tmp;
-      $softCount++;
-    } elsif ($randType == 3) {
-      $splitScore++ if $tmp;
-      $splitCount++;
-    } else {
-      print "Error calculating random value between 1 and 3.\n";
-      exit;
-    }
-    return;
+  iWantOut($guess);
+
+  return;
+}
+
+
+sub calcScore {
+  $tmp = shift;
+  $score++ if $tmp;
+  $count++;
+  if ($randType == 1) {
+    $hardScore++ if $tmp;
+    $hardCount++;
+  } elsif ($randType == 2) {
+    $softScore++ if $tmp;
+    $softCount++;
+  } elsif ($randType == 3) {
+    $splitScore++ if $tmp;
+    $splitCount++;
+  } else {
+    print "Error calculating random value between 1 and 3.\n";
+    exit;
   }
+  return;
+}
 
-sub summaryScore
-  {
-    # No decimal points
-    $perc=sprintf '%.f', 100*$score/$count if $score > 0;
-    $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
-    $softPerc=sprintf '%.f', 100*$softScore/$softCount if $softScore > 0;
-    $splitPerc=sprintf '%.f', 100*$splitScore/$splitCount if $splitScore > 0;
+sub summaryScore {
+  # No decimal points
+  $perc=sprintf '%.f', 100*$score/$count if $score > 0;
+  $hardPerc=sprintf '%.f', 100*$hardScore/$hardCount if $hardScore > 0;
+  $softPerc=sprintf '%.f', 100*$softScore/$softCount if $softScore > 0;
+  $splitPerc=sprintf '%.f', 100*$splitScore/$splitCount if $splitScore > 0;
 
-    print color 'red';
-    print "$score/$count, $perc%";
-    print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
-    print color 'reset';
+  print color 'red';
+  print "$score/$count, $perc%";
+  print " (H: $hardPerc%, S: $softPerc%, P: $splitPerc%)\n";
+  print color 'reset';
 
-    return;
+  return;
+}
+
+sub iWantOut {
+  my $out = shift || 'y';
+  #  Non-capturing regex
+  if ($out =~ /exit|no?|q(?:uit)?/ix) {
+    print "Final score:\n";
+    summaryScore();
+    exit;
   }
+  return;
+}
 
-sub iWantOut
-  {
-    my $out = shift || 'y';
-    #  Non-capturing regex
-    if ($out =~ /exit|no?|q(?:uit)?/ix) {
-      print "Final score:\n";
-      summaryScore();
-      exit;
-    }
-    return;
-  }
+#### Usage statement ####
+# Escapes not necessary but ensure pretty colors
+# Could use POD but meh
+# Final line must be unindented?
+sub usage {
+  print <<"USAGE";
+Run with no arguments to play the game, or pass three arguments:
+    $PROGRAM_NAME
+    $PROGRAM_NAME <h, s, p> <dealer_value> <player_value>
+
+    -h Print usage message and exit
+USAGE
+  exit;
+}
