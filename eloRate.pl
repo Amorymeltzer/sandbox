@@ -20,7 +20,7 @@ usage() if $opts{h};
 
 # k can be changed to tweak sensitivity.  higher k = more sensitive to recents
 my $k = $opts{k} || 42;
-if ($opts{k} !~ /^\d+$/) {
+if ($k !~ /^\d+$/) {
   print "k must be an integer\n";
   exit 1;
 }
