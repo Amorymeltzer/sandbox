@@ -15,8 +15,15 @@ use Term::ANSIColor;
 
 # Parse commandline options
 my %opts = ();
-getopts('hd', \%opts);
+getopts('hdk:', \%opts);
 usage() if $opts{h};
+
+# k can be changed to tweak sensitivity.  higher k = more sensitive to recents
+my $k = $opts{k} || 42;
+if ($opts{k} !~ /^\d+$/) {
+  print "k must be an integer\n";
+  exit 1;
+}
 
 my $file = $ARGV[0];
 my @list;
@@ -106,9 +113,8 @@ sub eloScore {
   my $eaw = shift @_;
   my $eal = shift @_;
 
-  # k=32, can be changed to tweak sensitivity.  higher k = more sensitive to recents
-  $scoreHash{$win} += 32*(1-$eaw);
-  $scoreHash{$los} += 32*(0-$eal);
+  $scoreHash{$win} += $k*(1-$eaw);
+  $scoreHash{$los} += $k*(0-$eal);
 
   if ($opts{d}) {
     print "\nWon: $win\tLost: $los\n";
@@ -124,8 +130,9 @@ sub eloScore {
 # Final line must be unindented?
 sub usage {
   print <<"USAGE";
-Usage: $PROGRAM_NAME [-hd] list.csv
+Usage: $PROGRAM_NAME [-hd] [-k 42] list.csv
       -d Show points and predictions while scoring
+      -k Provide a specific k, default is 42
       -h Print this message
 USAGE
   exit;
