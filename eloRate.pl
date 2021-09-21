@@ -9,13 +9,14 @@ use strict;
 use warnings;
 use diagnostics;
 
+use Getopt::Std;
 use English qw( -no_match_vars);
 use Term::ANSIColor;
 
-if (@ARGV != 1) {
-  print "Usage: $PROGRAM_NAME list.csv\n";
-  exit;
-}
+# Parse commandline options
+my %opts = ();
+getopts('hd', \%opts);
+usage() if $opts{h};
 
 my $file = $ARGV[0];
 my @list;
@@ -32,9 +33,6 @@ while (<$data>) {
 }
 close $data || die $ERRNO;
 
-# Start the scoring process, these are just needed once
-system 'clear';
-print "Rate these two items.  A for the left one, L for the right one\n";
 
 # Loop through 'em all
 my $length = scalar keys %scoreHash;
@@ -50,23 +48,37 @@ while ($infinite !=0) {
 
   ($item1,$item2) = ($list[$rand1],$list[$rand2]);
   eloPred();
-  print colored ['red'],"$item1 ($scoreHash{$item1}, $ea1)";
-  print ' or ';
-  print colored ['red'],"$item2 ($scoreHash{$item2}, $ea2)\n";
+
+  if (!$opts{d}) {
+    system 'clear';
+  }
+  print "Rate these two items.\n";
+  print "Press A to select the left one, L for the right one.  S to skip, Q to quit.\n\n";
+
+  if ($opts{d}) {
+    print colored ['blue'],"$item1 ($scoreHash{$item1}, $ea1)";
+    print ' or ';
+    print colored ['blue'],"$item2 ($scoreHash{$item2}, $ea2)\n";
+  } else {
+    print colored ['blue'],"$item1";
+    print ' or ';
+    print colored ['blue'],"$item2\n";
+  }
 
   $rating = <STDIN>;
   chomp $rating;
-  # system 'clear';
+  next if $rating eq 's';
+  last if $rating eq 'exit' || $rating eq 'q' || $rating eq 'quit';
+
   if ($rating eq 'a') {
     eloScore($item1,$item2,$ea1,$ea2);
-    $scoreHash{$item1}++;
-    print "$item1:\t$scoreHash{$item1}\n";
   } elsif ($rating eq 'l') {
     eloScore($item2,$item1,$ea2,$ea1);
-    $scoreHash{$item2}++;
+  }
+
+  if ($opts{d}) {
+    print "$item1:\t$scoreHash{$item1}\n";
     print "$item2:\t$scoreHash{$item2}\n";
-  } elsif ($rating eq 'exit' || $rating eq 'q' || $rating eq 'quit') {
-    last;
   }
 }
 
@@ -98,5 +110,23 @@ sub eloScore {
   $scoreHash{$win} += 32*(1-$eaw);
   $scoreHash{$los} += 32*(0-$eal);
 
-  print "Won: $win\tLost: $los\n";
+  if ($opts{d}) {
+    print "\nWon: $win\tLost: $los\n";
+    print "$win:\t$scoreHash{$win}\n";
+    print "$los:\t$scoreHash{$los}\n";
+  }
+}
+
+
+#### Usage statement ####
+# Use POD or whatever?
+# Escapes not necessary but ensure pretty colors
+# Final line must be unindented?
+sub usage {
+  print <<"USAGE";
+Usage: $PROGRAM_NAME [-hd] list.csv
+      -d Show points and predictions while scoring
+      -h Print this message
+USAGE
+  exit;
 }
