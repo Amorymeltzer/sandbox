@@ -41,6 +41,8 @@ while (<$data>) {
 close $data || die $ERRNO;
 
 
+# Jut in case
+my $error = 0;
 # Loop through 'em all
 my $length = scalar keys %scoreHash;
 my $infinite = -1;
@@ -59,6 +61,11 @@ while ($infinite !=0) {
   if (!$opts{d}) {
     system 'clear';
   }
+
+  if ($error) {
+    print colored ['red'], "$rating was not a valid entry, the last round was skipped\n\n";
+  }
+
   print "Rate these two items.\n";
   print "Press A to select the left one, L for the right one.  S to skip, Q to quit.\n\n";
 
@@ -74,14 +81,18 @@ while ($infinite !=0) {
 
   $rating = <STDIN>;
   chomp $rating;
-  next if $rating eq 's';
-  last if $rating eq 'exit' || $rating eq 'q' || $rating eq 'quit';
+  next if $rating eq 's' or $rating eq 'S';
+  last if $rating eq 'exit' || $rating eq 'q' || $rating eq 'Q' || $rating eq 'quit';
 
-  if ($rating eq 'a') {
+  if ($rating eq 'a' || $rating eq 'A') {
     eloScore($item1,$item2,$ea1,$ea2);
-  } elsif ($rating eq 'l') {
+  } elsif ($rating eq 'l' || $rating eq 'L') {
     eloScore($item2,$item1,$ea2,$ea1);
+  } else {
+    $error = 1;
+    next;
   }
+  $error = 0;
 
   if ($opts{d}) {
     print "$item1:\t$scoreHash{$item1}\n";
