@@ -64,6 +64,7 @@ while ($infinite !=0) {
 
   if ($error) {
     print colored ['red'], "$rating was not a valid entry, the last round was skipped\n\n";
+    $error = 0;
   }
 
   print "Rate these two items.\n";
@@ -92,7 +93,6 @@ while ($infinite !=0) {
     $error = 1;
     next;
   }
-  $error = 0;
 
   if ($opts{d}) {
     print "$item1:\t$scoreHash{$item1}\n";
