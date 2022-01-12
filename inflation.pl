@@ -70,7 +70,8 @@ sub checkYearValue
 ## The lines below are not Perl code, and are not examined by the compiler.
 ## Rather, they provide a list of CPI-U data read in as <DATA>.
 __END__
-2020 258.811
+2021 270.970
+  2020 258.811
   2019 255.657
   2018 251.107
   2017 245.120
