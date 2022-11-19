@@ -4,9 +4,9 @@
 
 use warnings;
 use strict;
-eval 'use diagnostics; 1' or warn 'diagnostics not found';
+use English;
 
-unless (@ARGV == 3 || @ARGV == 2) {
+if (@ARGV != 2 && @ARGV != 3) {
   print "Usage: inflation.pl <USD> <inYear1> <isWorthinYear2>\n";
   exit;
 }
@@ -16,27 +16,20 @@ if ($ARGV[0] !~ m/^-?\d*\.?\d+$/x) {
   exit;
 }
 
-my $present;			# newest allowable
-my $past;			# oldest allowable
-my %yearAvg;			# holds year->CPI data
+# Hold year->CPI data table
+my %yearAvg;
 
 while (<DATA>) {
   chomp;
 
-  my @tmp = split;
-  $yearAvg{$tmp[0]} = $tmp[1];
-
-  # Newest allowable
-  if ($. == 1) {
-    $present = $tmp[0];
-  }
-  # Oldest allowable
-  $past = $tmp[0];
+  my @cpis = split;
+  $yearAvg{$cpis[0]} = $cpis[1];
 }
+# Potentially needed
+my @years = sort keys %yearAvg;
 
-my $oldDollar = $ARGV[0];
-my $oldYear = $ARGV[1];
-my $newYear;
+my ($oldDollar, $oldYear, $newYear) = ($ARGV[0], $ARGV[1]);
+
 
 # Validate inputs
 checkYearValue($oldYear);
@@ -44,7 +37,7 @@ if (@ARGV == 3) {
   $newYear = $ARGV[2];
   checkYearValue($newYear);
 } else {
-  $newYear = $present;
+  $newYear = $years[-1];
 }
 
 # Two decimal places
@@ -53,18 +46,17 @@ my $newDollar = sprintf '%.2f', $oldDollar*$yearAvg{$newYear}/$yearAvg{$oldYear}
 print "\$$oldDollar in $oldYear was worth \$$newDollar in $newYear\n";
 
 
-sub checkYearValue
-  {
-    my $year = shift;
-    if ($year !~ m/^\d\d\d\d$/x) {
-      print "Years must be in YYYY format\n";
-    } elsif ($year > $present || $year < $past) {
-      print "Years must be between $past and $present, inclusive\n";
-    } else {
-      return;
-    }
+sub checkYearValue {
+  my $year = shift;
+  if ($year !~ m/^\d\d\d\d$/x) {
+    print "Years must be in YYYY format\n";
+    exit;
+  } elsif (!$yearAvg{$year}) {
+    print "Years must be between $years[0] and $years[-1], inclusive\n";
     exit;
   }
+  return;
+}
 
 
 ## The lines below are not Perl code, and are not examined by the compiler.
