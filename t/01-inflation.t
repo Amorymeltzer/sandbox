@@ -19,11 +19,11 @@ script_runs([$script, '100', '17'], 'Err-year-format');
 script_stdout_is "Years must be in YYYY format\n", 'std_out:Err-year-format';
 script_runs([$script, '1000', '1912'], 'Err-year-range');
 # Ugh
-script_stdout_is "Years must be between 1914 and 2023, inclusive\n", 'std_out:Err-year-range';
+script_stdout_is "Years must be between 1914 and 2024, inclusive\n", 'std_out:Err-year-range';
 
-
+# Ugh
 script_runs([$script, '100', '2000'], '2000');
-script_stdout_is '$100 in 2000 was worth $176.95 in 2023'."\n", 'std_out:2000';
+script_stdout_is '$100 in 2000 was worth $182.17 in 2024'."\n", 'std_out:2000';
 
 script_runs([$script, '100', '2000', '2020'], '2000->2020');
 script_stdout_is '$100 in 2000 was worth $150.30 in 2020'."\n", 'std_out:2000->2020';
